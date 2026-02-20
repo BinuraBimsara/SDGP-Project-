@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
@@ -149,7 +150,7 @@ class StorageService {
       
       return result;
     } catch (e) {
-      print('Error compressing image: $e');
+      debugPrint('Error compressing image: $e');
       return null;
     }
   }
@@ -178,7 +179,7 @@ class StorageService {
         format: CompressFormat.jpeg,
       );
     } catch (e) {
-      print('Error compressing image bytes: $e');
+      debugPrint('Error compressing image bytes: $e');
       return null;
     }
   }
@@ -191,7 +192,7 @@ class StorageService {
       final Reference ref = _storage.refFromURL(downloadUrl);
       await ref.delete();
     } catch (e) {
-      print('Error deleting file: $e');
+      debugPrint('Error deleting file: $e');
       rethrow;
     }
   }
@@ -212,7 +213,7 @@ class StorageService {
         await itemRef.delete();
       }
     } catch (e) {
-      print('Error deleting report files: $e');
+      debugPrint('Error deleting report files: $e');
       rethrow;
     }
   }
@@ -239,7 +240,7 @@ class StorageService {
       
       return urls;
     } catch (e) {
-      print('Error getting report file URLs: $e');
+      debugPrint('Error getting report file URLs: $e');
       return [];
     }
   }

@@ -237,7 +237,12 @@ export class StorageService {
         wasCompressed = true;
         compressionRatio = compressionResult.compressionRatio;
       } catch (error) {
-        console.warn('Compression failed, uploading original file:', error);
+        console.warn(
+          'Image compression failed. Uploading original file instead. ' +
+          'This may result in slower upload times and higher data usage. ' +
+          'Consider uploading a smaller image if on a slow connection.',
+          error
+        );
       }
     }
 

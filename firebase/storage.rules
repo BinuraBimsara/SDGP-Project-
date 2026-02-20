@@ -18,11 +18,11 @@ service firebase.storage {
     }
     
     // Helper function to check if user is a government official
-    // Officials are identified by having '@gov' in their email domain
+    // Officials are identified by having a .gov email domain ending
     // or by having the 'official' custom claim set to true
     function isOfficial() {
       return isAuthenticated() && (
-        request.auth.token.email.matches('.*@gov\\..*') ||
+        request.auth.token.email.matches('.*@.*\\.gov$') ||
         request.auth.token.official == true
       );
     }
