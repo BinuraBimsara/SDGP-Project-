@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spotit/features/auth/data/services/auth_service.dart';
+import 'package:spotit/features/home/presentation/pages/home_controller_page.dart';
 import 'signup_dialog.dart';
+
+/// Roles supported by the login page.
+enum UserRole { citizen, official }
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   bool _isLoading = false;
 
+  // Only used by the Official flow
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -35,51 +39,21 @@ class _LoginPageState extends State<LoginPage> {
 
   // ─── Actions ─────────────────────────────────────────────
 
-  Future<void> _handleEmailSignIn() async {
+  /// Google Sign-In → navigate straight to home (no backend).
+  void _handleGoogleSignIn() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const HomeControllerPage()),
+    );
+  }
+
+  /// Official email/password sign-in → navigate to home (no backend).
+  void _handleOfficialSignIn() {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    try {
-      await AuthService().signInWithEmail(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        role: _selectedRole,
-      );
-      if (mounted) {
-        _showSnack('Signed in successfully!', isError: false);
-        // TODO: Navigate to home screen when ready
-        // Navigator.pushReplacementNamed(context, '/home');
-      }
-    } on Exception catch (e) {
-      if (mounted) _showSnack(e.toString().replaceAll('Exception: ', ''));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _handleGoogleSignIn() async {
-    setState(() => _isLoading = true);
-    try {
-      await AuthService().signInWithGoogle();
-      if (mounted) _showSnack('Signed in with Google!', isError: false);
-    } on Exception catch (e) {
-      if (mounted) _showSnack(e.toString().replaceAll('Exception: ', ''));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _handleForgotPassword() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      _showSnack('Enter your email first.');
-      return;
-    }
-    try {
-      await AuthService().sendPasswordResetEmail(email);
-      if (mounted) _showSnack('Password reset email sent!', isError: false);
-    } on Exception catch (e) {
-      if (mounted) _showSnack(e.toString().replaceAll('Exception: ', ''));
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const HomeControllerPage()),
+    );
   }
 
   void _openSignUpDialog() {
@@ -133,7 +107,6 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Logo box – dark yellow background with white pin icon
           Container(
             width: 64,
             height: 64,
@@ -211,66 +184,58 @@ class _LoginPageState extends State<LoginPage> {
             _buildRoleSelector(),
             const SizedBox(height: 20),
 
-            // ── Official info banner (only when Official is selected) ──
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: _selectedRole == UserRole.official
-                  ? Padding(
-                      key: const ValueKey('official-banner'),
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: _buildOfficialInfoBanner(),
-                    )
-                  : const SizedBox(key: ValueKey('no-banner'), height: 0),
-            ),
-
-            // ── Google Button (Citizen only) ──
+            // ── Content switches based on role ──
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: _selectedRole == UserRole.citizen
-                  ? Column(
-                      key: const ValueKey('google'),
-                      children: [
-                        _buildGoogleButton(),
-                        const SizedBox(height: 16),
-                        _buildDivider(),
-                        const SizedBox(height: 16),
-                      ],
-                    )
-                  : const SizedBox(key: ValueKey('no-google'), height: 0),
+                  ? _buildCitizenSection()
+                  : _buildOfficialSection(),
             ),
-
-            // ── Email Field ──
-            _buildLabel('Email'),
-            const SizedBox(height: 6),
-            _buildEmailField(),
-            const SizedBox(height: 14),
-
-            // ── Password Field ──
-            _buildLabel('Password'),
-            const SizedBox(height: 6),
-            _buildPasswordField(),
-            const SizedBox(height: 22),
-
-            // ── Sign In Button ──
-            _buildSignInButton(),
-            const SizedBox(height: 14),
-
-            // ── Forgot Password ──
-            Center(
-              child: TextButton(
-                onPressed: _handleForgotPassword,
-                child: const Text(
-                  'Forgot password?',
-                  style: TextStyle(color: Colors.blueAccent, fontSize: 13),
-                ),
-              ),
-            ),
-
-            // ── Sign Up Link (Citizens only) ──
-            _buildSignUpLink(),
           ],
         ),
       ),
+    );
+  }
+
+  // ─── Citizen Section (Google Sign-In only) ────────────────
+
+  Widget _buildCitizenSection() {
+    return Column(
+      key: const ValueKey('citizen-section'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildGoogleButton(),
+        const SizedBox(height: 18),
+        _buildSignUpLink(),
+      ],
+    );
+  }
+
+  // ─── Official Section (email/password) ────────────────────
+
+  Widget _buildOfficialSection() {
+    return Column(
+      key: const ValueKey('official-section'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildOfficialInfoBanner(),
+        const SizedBox(height: 16),
+
+        // ── Email Field ──
+        _buildLabel('Email'),
+        const SizedBox(height: 6),
+        _buildEmailField(),
+        const SizedBox(height: 14),
+
+        // ── Password Field ──
+        _buildLabel('Password'),
+        const SizedBox(height: 6),
+        _buildPasswordField(),
+        const SizedBox(height: 22),
+
+        // ── Sign In Button ──
+        _buildSignInButton(),
+      ],
     );
   }
 
@@ -408,25 +373,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ─── Divider ─────────────────────────────────────────────
-
-  Widget _buildDivider() {
-    return Row(
-      children: [
-        Expanded(child: Divider(color: Colors.grey[300])),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'Or continue with email',
-            style: TextStyle(color: Colors.grey[500], fontSize: 12),
-          ),
-        ),
-        Expanded(child: Divider(color: Colors.grey[300])),
-      ],
-    );
-  }
-
-  // ─── Form Fields ─────────────────────────────────────────
+  // ─── Form Fields (Official only) ─────────────────────────
 
   Widget _buildLabel(String text) {
     return Text(
@@ -440,17 +387,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildEmailField() {
-    final isOfficial = _selectedRole == UserRole.official;
     return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
-      decoration: _inputDecoration(
-        isOfficial ? 'official@dept.gov.lk' : 'you@example.com',
-      ),
+      decoration: _inputDecoration('official@dept.gov.lk'),
       validator: (v) {
         if (v == null || v.trim().isEmpty) return 'Email is required';
         if (!v.contains('@')) return 'Enter a valid email';
-        if (isOfficial && !v.trim().toLowerCase().endsWith('.gov.lk')) {
+        if (!v.trim().toLowerCase().endsWith('.gov.lk')) {
           return 'Officials must use a .gov.lk email';
         }
         return null;
@@ -505,13 +449,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ─── Sign In Button ──────────────────────────────────────
+  // ─── Sign In Button (Official only) ──────────────────────
 
   Widget _buildSignInButton() {
     return SizedBox(
       height: 50,
       child: ElevatedButton(
-        onPressed: _isLoading ? null : _handleEmailSignIn,
+        onPressed: _isLoading ? null : _handleOfficialSignIn,
         style: ElevatedButton.styleFrom(
           backgroundColor: _green,
           foregroundColor: Colors.white,
