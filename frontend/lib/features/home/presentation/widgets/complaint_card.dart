@@ -90,7 +90,7 @@ class _ComplaintCardState extends State<ComplaintCard>
         ? const Color(0xFF1C2733)
         : const Color(0xFFE8EDF2);
     final upvoteArrowColor = _isUpvoted
-        ? const Color(0xFF4CAF50)
+        ? const Color(0xFFFFC107)
         : (isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black54);
 
     return GestureDetector(
@@ -133,12 +133,12 @@ class _ComplaintCardState extends State<ComplaintCard>
                         ),
                         decoration: BoxDecoration(
                           color: _isUpvoted
-                              ? const Color(0xFF4CAF50).withValues(alpha: 0.15)
+                              ? const Color(0xFFFFC107).withValues(alpha: 0.15)
                               : upvotePillBg,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: _isUpvoted
-                                ? const Color(0xFF4CAF50).withValues(alpha: 0.4)
+                                ? const Color(0xFFFFC107).withValues(alpha: 0.4)
                                 : (isDark
                                       ? Colors.white.withValues(alpha: 0.08)
                                       : Colors.black.withValues(alpha: 0.06)),
@@ -158,7 +158,7 @@ class _ComplaintCardState extends State<ComplaintCard>
                               '$_upvoteCount',
                               style: TextStyle(
                                 color: _isUpvoted
-                                    ? const Color(0xFF4CAF50)
+                                    ? const Color(0xFFFFC107)
                                     : (isDark
                                           ? Colors.white.withValues(alpha: 0.8)
                                           : Colors.black87),
@@ -233,7 +233,7 @@ class _ComplaintCardState extends State<ComplaintCard>
                                 ? loadingProgress.cumulativeBytesLoaded /
                                       loadingProgress.expectedTotalBytes!
                                 : null,
-                            color: const Color(0xFF4CAF50),
+                            color: const Color(0xFFFFC107),
                             strokeWidth: 2,
                           ),
                         ),

@@ -14,11 +14,11 @@ class ProfilePage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundColor: const Color(0xFF4CAF50).withAlpha(50),
+              backgroundColor: const Color(0xFFFFC107).withAlpha(50),
               child: const Icon(
                 Icons.person_rounded,
                 size: 50,
-                color: Color(0xFF4CAF50),
+                color: Color(0xFFFFC107),
               ),
             ),
             const SizedBox(height: 24),

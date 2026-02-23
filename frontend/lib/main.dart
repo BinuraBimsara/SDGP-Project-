@@ -55,10 +55,10 @@ class SpotItApp extends StatelessWidget {
             theme: ThemeData(
               brightness: Brightness.light,
               scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-              primaryColor: const Color(0xFF4CAF50),
+              primaryColor: const Color(0xFFFFC107),
               colorScheme: ColorScheme.light(
-                primary: const Color(0xFF4CAF50),
-                secondary: const Color(0xFF4CAF50),
+                primary: const Color(0xFFFFC107),
+                secondary: const Color(0xFFFFC107),
                 surface: Colors.white,
               ),
               appBarTheme: const AppBarTheme(
@@ -71,10 +71,10 @@ class SpotItApp extends StatelessWidget {
             darkTheme: ThemeData(
               brightness: Brightness.dark,
               scaffoldBackgroundColor: const Color(0xFF121212),
-              primaryColor: const Color(0xFF4CAF50),
+              primaryColor: const Color(0xFFFFC107),
               colorScheme: ColorScheme.dark(
-                primary: const Color(0xFF4CAF50),
-                secondary: const Color(0xFF4CAF50),
+                primary: const Color(0xFFFFC107),
+                secondary: const Color(0xFFFFC107),
                 surface: const Color(0xFF1E1E1E),
               ),
               appBarTheme: const AppBarTheme(
