@@ -221,15 +221,15 @@ class _SignUpDialogState extends State<SignUpDialog> {
                     TextFormField(
                       controller: _passwordCtrl,
                       obscureText: _obscurePassword,
-                      decoration: _inputDecoration('Min. 6 characters')
-                          .copyWith(
-                            suffixIcon: _eyeIcon(
-                              _obscurePassword,
-                              () => setState(
-                                () => _obscurePassword = !_obscurePassword,
-                              ),
-                            ),
+                      decoration:
+                          _inputDecoration('Min. 6 characters').copyWith(
+                        suffixIcon: _eyeIcon(
+                          _obscurePassword,
+                          () => setState(
+                            () => _obscurePassword = !_obscurePassword,
                           ),
+                        ),
+                      ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Required';
                         if (v.length < 6) return 'Min. 6 characters';
@@ -244,15 +244,15 @@ class _SignUpDialogState extends State<SignUpDialog> {
                     TextFormField(
                       controller: _confirmPasswordCtrl,
                       obscureText: _obscureConfirm,
-                      decoration: _inputDecoration('Re-enter password')
-                          .copyWith(
-                            suffixIcon: _eyeIcon(
-                              _obscureConfirm,
-                              () => setState(
-                                () => _obscureConfirm = !_obscureConfirm,
-                              ),
-                            ),
+                      decoration:
+                          _inputDecoration('Re-enter password').copyWith(
+                        suffixIcon: _eyeIcon(
+                          _obscureConfirm,
+                          () => setState(
+                            () => _obscureConfirm = !_obscureConfirm,
                           ),
+                        ),
+                      ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Required';
                         if (v != _passwordCtrl.text) {
