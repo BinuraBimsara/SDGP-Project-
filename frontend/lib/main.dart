@@ -47,7 +47,7 @@ class SpotItApp extends StatelessWidget {
       repository: repository,
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: themeNotifier,
-        builder: (_, mode, __) {
+        builder: (_, mode, _) {
           return MaterialApp(
             title: 'SpotIT',
             debugShowCheckedModeBanner: false,
